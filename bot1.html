@@ -1,0 +1,1313 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="UniBot Pro - AI Powered University Assistant Chatbot with Voice"
+    />
+    <title>UniBot Pro v2.1 - AI Powered University Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="bot1.css">
+    <style>
+      :root {
+        --primary: #4f46e5;
+        --primary-dark: #4338ca;
+        --secondary: #10b981;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #1e293b;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.08);
+        --danger: #ef4444;
+        --radius: 12px;
+        --font: "Poppins", sans-serif;
+      }
+      [data-theme="dark"] {
+        --primary: #6366f1;
+        --bg: #0f172a;
+        --card: #1e293b;
+        --text: #f1f5f9;
+        --text-light: #94a3b8;
+        --border: #334155;
+        --shadow: rgba(0, 0, 0, 0.4);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: var(--font);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+      img {
+        max-width: 100%;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+      }
+
+      /* LOGIN - MOBILE FIRST */
+      .login-screen {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, var(--primary), #9333ea);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 15px;
+        overflow-y: auto;
+      }
+      .login-container {
+        background: var(--card);
+        display: flex;
+        border-radius: 20px;
+        overflow: hidden;
+        width: 900px;
+        max-width: 100%;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      }
+      .login-logo {
+        width: 45%;
+        background: var(--primary);
+        color: white;
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .login-logo i {
+        font-size: 60px;
+        margin-bottom: 15px;
+      }
+      .login-form {
+        width: 55%;
+        padding: 40px;
+      }
+      .login-form h2 {
+        margin-bottom: 20px;
+        color: var(--primary);
+      }
+      .input-group {
+        margin-bottom: 15px;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .login-btn {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .login-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: var(--text-light);
+      }
+
+      /* APP LAYOUT */
+      .app-wrapper {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+      .sidebar {
+        width: 260px;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        transition: 0.3s;
+        flex-shrink: 0;
+        z-index: 1001;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 30px;
+        color: var(--primary);
+      }
+      .nav-title {
+        font-size: 12px;
+        color: var(--text-light);
+        margin: 20px 0 10px 10px;
+        font-weight: 600;
+      }
+      .nav-item {
+        padding: 12px 14px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-light);
+        list-style: none;
+      }
+      .nav-item:hover,
+      .nav-item.active {
+        background: var(--primary);
+        color: white;
+      }
+      .sidebar-footer {
+        margin-top: auto;
+      }
+      .theme-toggle {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+      .lang-select select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      /* MAIN */
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0;
+      }
+      .topbar {
+        height: 65px;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+      .topbar-left h2 {
+        font-size: 17px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .menu-btn {
+        font-size: 22px;
+        cursor: pointer;
+        display: none;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .user-info img {
+        border-radius: 50%;
+        border: 2px solid var(--primary);
+        object-fit: cover;
+        width: 40px;
+        height: 40px;
+      }
+      .user-info div small {
+        display: block;
+        font-size: 11px;
+        color: var(--text-light);
+      }
+      .logout-btn {
+        background: var(--danger);
+        color: white;
+        border: none;
+        padding: 7px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      /* PAGES */
+      .page {
+        display: none;
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+      }
+      .page.active {
+        display: block;
+      }
+
+      /* CHAT */
+      .chat-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        height: calc(100vh - 140px);
+        display: flex;
+        flex-direction: column;
+        background: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px var(--shadow);
+        overflow: hidden;
+      }
+      .chat-header {
+        padding: 15px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .chat-area {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .message {
+        padding: 12px 16px;
+        border-radius: 18px;
+        max-width: 75%;
+        line-height: 1.6;
+        word-wrap: break-word;
+        position: relative;
+        font-size: 14px;
+      }
+      .message.bot {
+        background: var(--bg);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+        padding-right: 40px;
+      }
+      .message.user {
+        background: var(--primary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+      .quick-questions {
+        padding: 10px 15px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        border-top: 1px solid var(--border);
+      }
+      .q-btn {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--text);
+      }
+      .input-area {
+        display: flex;
+        padding: 10px 15px;
+        gap: 8px;
+        border-top: 1px solid var(--border);
+        align-items: center;
+      }
+      .input-area input {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 25px;
+        background: var(--bg);
+        color: var(--text);
+        outline: none;
+      }
+      .attach-btn,
+      .voice-btn,
+      .send-btn {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border: none;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* DASHBOARD & OTHERS */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .stat-card {
+        background: var(--card);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-left: 4px solid var(--primary);
+      }
+      .stat-card i {
+        font-size: 24px;
+        color: var(--primary);
+      }
+      .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+      }
+      .book-card,
+      .event-card,
+      .fee-card,
+      .admin-box,
+      .profile-card,
+      .chart-container,
+      .history-section {
+        background: var(--card);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        margin-bottom: 15px;
+      }
+      .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+      }
+      .history-section {
+        overflow-x: auto;
+      }
+      .history-section table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 500px;
+      }
+      .history-section th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+      }
+      .profile-card {
+        max-width: 400px;
+        margin: 20px auto;
+        text-align: center;
+      }
+      .profile-card img {
+        border-radius: 50%;
+        border: 4px solid var(--primary);
+        object-fit: cover;
+      }
+      .app-footer {
+        text-align: center;
+        padding: 12px;
+        border-top: 1px solid var(--border);
+        background: var(--card);
+        font-size: 12px;
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+      .sidebar-overlay.active {
+        display: block;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        max-width: 300px;
+        margin: auto;
+        background: var(--secondary);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 8px;
+        z-index: 9999;
+        text-align: center;
+      }
+      .speak-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: transparent;
+        border: none;
+        color: var(--primary);
+        cursor: pointer;
+      }
+      .admin-box input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .admin-box button,
+      .fee-card button,
+      .history-section button {
+        background: var(--secondary);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 5px;
+      }
+      .kb-item {
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 13px;
+      }
+
+      /* RESPONSIVE BREAKPOINTS - 100% RESPONSIVE */
+      @media (max-width: 992px) {
+        .sidebar {
+          position: fixed;
+          left: -280px;
+          top: 0;
+          height: 100%;
+        }
+        .sidebar.open {
+          left: 0;
+        }
+        .menu-btn {
+          display: block;
+        }
+      }
+      @media (max-width: 768px) {
+        .login-container {
+          flex-direction: column;
+        }
+        .login-logo {
+          width: 100%;
+          padding: 25px 20px;
+        }
+        .login-logo i {
+          font-size: 45px;
+        }
+        .login-form {
+          width: 100%;
+          padding: 25px 20px;
+        }
+        .chat-wrapper {
+          height: calc(100vh - 125px);
+          border-radius: 0;
+          max-width: 100%;
+        }
+        .message {
+          max-width: 85%;
+          font-size: 13px;
+        }
+        .user-info div {
+          display: none;
+        }
+        .topbar-left h2 {
+          font-size: 15px;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .book-grid {
+          grid-template-columns: 1fr;
+        }
+        .page {
+          padding: 10px;
+        }
+        .chat-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+      @media (max-width: 480px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .input-area {
+          gap: 5px;
+          padding: 8px 10px;
+        }
+        .attach-btn,
+        .voice-btn,
+        .send-btn {
+          width: 40px;
+          height: 40px;
+          min-width: 40px;
+          font-size: 14px;
+        }
+        .topbar {
+          padding: 0 10px;
+          height: 60px;
+        }
+        .login-screen {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loginScreen" class="login-screen">
+      <div class="login-container">
+        <div class="login-logo">
+          <i class="fa-solid fa-robot"></i>
+          <h1>UniBot Pro</h1>
+          <p>AI Powered University Assistant</p>
+        </div>
+        <div class="login-form">
+          <h2>Welcome Back</h2>
+          <div class="input-group">
+            <label>Full Name</label
+            ><input type="text" id="loginUser" placeholder="Enter your name" />
+          </div>
+          <div class="input-group">
+            <label>Role</label
+            ><select id="loginRole">
+              <option value="Student">Student</option>
+              <option value="Teacher">Teacher</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Department</label
+            ><select id="loginDept">
+              <option>Computer Science</option>
+              <option>Software Engineering</option>
+              <option>Artificial Intelligence</option>
+              <option>IT</option>
+            </select>
+          </div>
+          <button class="login-btn" onclick="login()">
+            Login to Dashboard
+          </button>
+          <p class="login-footer">Version 2.1.0 | Team 6 | With AI Voice</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="app-wrapper" id="appWrapper" style="display: none">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <i class="fa-solid fa-robot"></i>
+          <div>
+            <h1 style="font-size: 18px">UniBot Pro</h1>
+            <span style="font-size: 11px; color: var(--text-light)"
+              >v2.1 Enterprise</span
+            >
+          </div>
+        </div>
+        <nav>
+          <p class="nav-title">MAIN MENU</p>
+          <ul>
+            <li class="nav-item active" data-page="chat">
+              <i class="fa-solid fa-comments"></i><span>AI Chat </span>
+            </li>
+            <li class="nav-item" data-page="dashboard">
+              <i class="fa-solid fa-chart-pie"></i><span>Analytics</span>
+            </li>
+            <li class="nav-item" data-page="library">
+              <i class="fa-solid fa-book"></i><span>Library</span>
+            </li>
+            <li class="nav-item" data-page="events">
+              <i class="fa-solid fa-calendar-days"></i><span>Events</span>
+            </li>
+            <li class="nav-item" data-page="fees">
+              <i class="fa-solid fa-credit-card"></i><span>Fee Portal</span>
+            </li>
+          </ul>
+          <p class="nav-title">ADMIN</p>
+          <ul>
+            <li class="nav-item" data-page="admin">
+              <i class="fa-solid fa-user-shield"></i><span>Admin Panel</span>
+            </li>
+            <li class="nav-item" data-page="profile">
+              <i class="fa-solid fa-user"></i><span>My Profile</span>
+            </li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="theme-toggle" onclick="toggleTheme()">
+            <i class="fa-solid fa-circle-half-stroke"></i>
+            <span>Toggle Theme</span>
+          </div>
+          <div class="lang-select">
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+              <option value="en">English Voice</option>
+              <option value="ur">Urdu Voice</option>
+            </select>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="topbar-left">
+            <i class="fa-solid fa-bars menu-btn" onclick="toggleSidebar()"></i>
+            <h2 id="pageTitle">AI Chat Assistant</h2>
+          </div>
+          <div class="topbar-right">
+            <div
+              class="notification"
+              onclick="showToast('3 New Notifications')"
+            >
+              <i class="fa-solid fa-bell"></i>
+            </div>
+            <div class="user-info">
+              <img src="assest/rectangle ahmad.jpeg" alt="user" />
+              <div>
+                <span id="currentUser" style="font-size: 13px; font-weight: 600"
+                  >Student</span
+                ><small id="currentRole">Student</small>
+              </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </div>
+        </header>
+
+        <section class="page active" id="chat">
+          <div class="chat-wrapper">
+            <div class="chat-header">
+              <div>
+                <h3>
+                  <i class="fa-solid fa-sparkles"></i> Ask UniBot Anything
+                </h3>
+                <p style="font-size: 12px; color: var(--text-light)">
+                  Get instant answers with Voice
+                </p>
+              </div>
+              <div class="chat-actions">
+                <button
+                  onclick="clearChat()"
+                  style="
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    border: 1px solid var(--border);
+                    cursor: pointer;
+                    font-size: 12px;
+                  "
+                >
+                  <i class="fa-solid fa-trash"></i> Clear
+                </button>
+                <button
+                  onclick="exportChat()"
+                  style="
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    border: 1px solid var(--border);
+                    cursor: pointer;
+                    font-size: 12px;
+                  "
+                >
+                  <i class="fa-solid fa-download"></i> Export
+                </button>
+              </div>
+            </div>
+            <div class="chat-area" id="chatArea"></div>
+            <div class="quick-questions" id="quickQuestions"></div>
+            <div class="input-area">
+              <button class="attach-btn" onclick="showToast('Coming Soon')">
+                <i class="fa-solid fa-paperclip"></i>
+              </button>
+              <button class="voice-btn" onclick="startVoice()">
+                <i class="fa-solid fa-microphone"></i>
+              </button>
+              <input
+                type="text"
+                id="userInput"
+                placeholder="Type: name, admission, fee, HOD..."
+                onkeypress="if (event.key === 'Enter') handleSend();"
+              />
+              <button class="send-btn" onclick="handleSend()">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="dashboard">
+          <h3>Analytics Dashboard</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <i class="fa-solid fa-message"></i>
+              <div>
+                <h4 style="font-size: 12px; color: var(--text-light)">
+                  Total Chats
+                </h4>
+                <p
+                  id="statChats"
+                  style="
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: var(--primary);
+                  "
+                >
+                  0
+                </p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fa-solid fa-user-check"></i>
+              <div>
+                <h4 style="font-size: 12px; color: var(--text-light)">
+                  Active Users
+                </h4>
+                <p style="font-size: 20px; font-weight: 700">1,240</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fa-solid fa-star"></i>
+              <div>
+                <h4 style="font-size: 12px; color: var(--text-light)">
+                  Satisfaction
+                </h4>
+                <p style="font-size: 20px; font-weight: 700">98.5%</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <h4 style="font-size: 12px; color: var(--text-light)">
+                  Avg Response
+                </h4>
+                <p style="font-size: 20px; font-weight: 700">0.8s</p>
+              </div>
+            </div>
+          </div>
+          <div class="chart-container"><canvas id="chatChart"></canvas></div>
+          <div class="history-section">
+            <h4>Recent Chat History</h4>
+            <table id="historyTable">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>User</th>
+                  <th>Question</th>
+                  <th>Sentiment</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <button onclick="generateReport()">Download Full Report</button>
+          </div>
+        </section>
+
+        <section class="page" id="library">
+          <h3>Digital Library</h3>
+          <input
+            type="text"
+            id="bookSearch"
+            placeholder="Search Book..."
+            onkeyup="searchBooks()"
+            style="
+              width: 100%;
+              padding: 12px;
+              margin: 15px 0;
+              border: 1px solid var(--border);
+              border-radius: 8px;
+            "
+          />
+          <div class="book-grid" id="bookList"></div>
+        </section>
+        <section class="page" id="events">
+          <h3>University Events</h3>
+          <div id="eventList"></div>
+        </section>
+        <section class="page" id="fees">
+          <h3>Fee Management Portal</h3>
+          <div class="fee-card">
+            <h4>Current Semester Fee</h4>
+            <p style="font-size: 22px; font-weight: 700; margin: 10px 0">
+              54,000 PKR
+            </p>
+            <button onclick="showToast('Payment Gateway Coming Soon')">
+              Pay Online
+            </button>
+          </div>
+        </section>
+        <section class="page" id="admin">
+          <h3>Admin Control Panel</h3>
+          <div class="admin-grid">
+            <div class="admin-box">
+              <h4>Add New FAQ</h4>
+              <input id="adminKeyword" placeholder="Keyword" /><textarea
+                id="adminAnswer"
+                placeholder="Answer"
+              ></textarea
+              ><button onclick="addNewFAQ()">Add</button>
+            </div>
+            <div class="admin-box">
+              <h4>Knowledge Base</h4>
+              <div id="kbList"></div>
+            </div>
+            <div class="admin-box">
+              <h4>System Settings</h4>
+              <button onclick="clearHistory()">Clear All Data</button>
+            </div>
+          </div>
+        </section>
+        <section class="page" id="profile">
+          <h3>My Profile</h3>
+          <div class="profile-card">
+            <img
+              width="120"
+              height="120"
+              src="assest/rectangle ahmad.jpeg"
+              alt=""
+            />
+            <h4 id="profileName">-</h4>
+            <p id="profileRole">-</p>
+            <p>Department: <span id="profileDept">-</span></p>
+            <p>Chats: <span id="profileChats">0</span></p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="app-footer">
+      <p>© 2026 UniBot Pro. Developed by Team 3 - AI Department</p>
+    </footer>
+
+    <script>
+      const KNOWLEDGE_BASE = {
+        "your name":
+          "My name is UniBot Pro 🤖 I am your AI University Assistant.",
+        "what is your name":
+          "My name is UniBot Pro. You can also call me UniBot.",
+        "who are you":
+          "I am UniBot Pro. I help students with university information.",
+        hello: "Hello! How can I help you?",
+        hi: "Hi! What would you like to know?",
+        "thank you": "You're welcome! Anything else?",
+        "how are you": "I am great! How can I assist you today?",
+        bye: "Goodbye! Have a great day.",
+        admission:
+          "Admissions are open in July and January. Last date is 30th September.",
+        fee: "BSCS Fee: 80,000 PKR per semester. BSSE: 75,000 PKR. Installment plan available.",
+        scholarship:
+          "We offer Need-Based and Merit-Based scholarships. 50% to 100%. Visit Financial Aid Office Block A.",
+        hod: "sir. Dosdar is HOD. Email: hod.cs@university.edu.pk. Office: Block B, Room 101.",
+        timing: "Class Timings: 8:00 AM to 3:00 PM, Monday to Friday.",
+        lab: "AI Lab: Block C, 2nd Floor. Timing: 9AM-5PM. You need student ID card.",
+        default:
+          "Sorry, I don't know the answer. Ask about admission, fee, HOD, timing, or 'what is your name' 😊",
+      };
+      const QUICK_QUESTIONS = [
+        "what is your name",
+        "admission",
+        "fee structure",
+        "HOD contact",
+        "class timing",
+        "scholarship",
+      ];
+      const BOOKS = [
+        {
+          name: "Artificial Intelligence",
+          author: "Stuart Russell",
+          year: 2020,
+        },
+        { name: "Data Structures", author: "Mark Allen", year: 2019 },
+        {
+          name: "Operating Systems",
+          author: "Abraham Silberschatz",
+          year: 2021,
+        },
+        { name: "Database System", author: "C.J. Date", year: 2018 },
+        { name: "Computer Networks", author: "Andrew Tanenbaum", year: 2022 },
+      ];
+      const EVENTS = [
+        {
+          title: "Tech Fest 2026",
+          date: "20 Oct 2026",
+          desc: "Annual tech competition",
+        },
+        {
+          title: "Mid Term Exams",
+          date: "15 Nov 2026",
+          desc: "For all departments",
+        },
+      ];
+      let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+      let customKB = JSON.parse(localStorage.getItem("customKB")) || {};
+      let currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+      let currentLang = "en-US";
+      window.onload = function () {
+        if (currentUser.name) {
+          document.getElementById("loginScreen").style.display = "none";
+          document.getElementById("appWrapper").style.display = "flex";
+          document.getElementById("currentUser").innerText = currentUser.name;
+          document.getElementById("currentRole").innerText = currentUser.role;
+          document.getElementById("profileName").innerText = currentUser.name;
+          document.getElementById("profileRole").innerText = currentUser.role;
+          document.getElementById("profileDept").innerText = currentUser.dept;
+          initApp();
+        }
+      };
+      function login() {
+        const name = document.getElementById("loginUser").value.trim();
+        if (name === "") {
+          alert("Please enter name");
+          return;
+        }
+        currentUser = {
+          name: name,
+          role: document.getElementById("loginRole").value,
+          dept: document.getElementById("loginDept").value,
+        };
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("appWrapper").style.display = "flex";
+        document.getElementById("currentUser").innerText = currentUser.name;
+        document.getElementById("currentRole").innerText = currentUser.role;
+        document.getElementById("profileName").innerText = currentUser.name;
+        document.getElementById("profileRole").innerText = currentUser.role;
+        document.getElementById("profileDept").innerText = currentUser.dept;
+        initApp();
+      }
+      function logout() {
+        if (confirm("Logout?")) {
+          localStorage.removeItem("currentUser");
+          location.reload();
+        }
+      }
+      function initApp() {
+        displayWelcomeMessage();
+        loadQuickQuestions();
+        loadChatHistory();
+        loadKnowledgeBase();
+        updateDashboard();
+        loadChart();
+        loadBooks();
+        loadEvents();
+        checkAdminAccess();
+      }
+      function displayWelcomeMessage() {
+        const chatArea = document.getElementById("chatArea");
+        if (chatArea.children.length === 0) {
+          addMessage(
+            `Hello ${currentUser.name}! I am UniBot Pro 🤖\nI can help you with ${currentUser.dept} related queries.`,
+            "bot",
+          );
+        }
+      }
+      function handleSend() {
+        const input = document.getElementById("userInput");
+        const userText = input.value.trim();
+        if (userText === "") return;
+        addMessage(userText, "user");
+        showTypingIndicator();
+        setTimeout(() => {
+          removeTypingIndicator();
+          const botReply = getBotReply(userText);
+          addMessage(botReply, "bot");
+          saveToHistory(userText, botReply);
+          updateDashboard();
+        }, 700);
+        input.value = "";
+      }
+      function addMessage(text, sender) {
+        const chatArea = document.getElementById("chatArea");
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `message ${sender}`;
+        if (sender === "bot") {
+          msgDiv.innerHTML = `<span>${text}</span><button class="speak-btn" onclick="speakText(\`${text.replace(/`/g, "\\`")}\`)"><i class="fa-solid fa-volume-high"></i></button>`;
+        } else {
+          msgDiv.innerText = text;
+        }
+        chatArea.appendChild(msgDiv);
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
+      function showTypingIndicator() {
+        const chatArea = document.getElementById("chatArea");
+        const typing = document.createElement("div");
+        typing.className = "message bot";
+        typing.id = "typing";
+        typing.innerHTML =
+          'UniBot is typing<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>';
+        chatArea.appendChild(typing);
+      }
+      function removeTypingIndicator() {
+        document.getElementById("typing")?.remove();
+      }
+      function getBotReply(msg) {
+        msg = msg.toLowerCase();
+        let mergedKB = { ...KNOWLEDGE_BASE, ...customKB };
+        for (let key in mergedKB) {
+          if (msg.includes(key)) return mergedKB[key];
+        }
+        return mergedKB.default;
+      }
+      function analyzeSentiment(text) {
+        const positive = ["good", "great", "thanks", "helpful", "nice"];
+        return positive.some((word) => text.includes(word))
+          ? "Positive"
+          : "Neutral";
+      }
+      function speakText(text) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = currentLang;
+        utterance.rate = 1;
+        window.speechSynthesis.speak(utterance);
+        showToast("Speaking...");
+      }
+      function changeLanguage(lang) {
+        currentLang = lang === "ur" ? "ur-PK" : "en-US";
+        showToast(`Voice: ${lang === "ur" ? "Urdu" : "English"}`);
+      }
+      function startVoice() {
+        if (!("webkitSpeechRecognition" in window)) {
+          alert("Voice not supported");
+          return;
+        }
+        const rec = new webkitSpeechRecognition();
+        rec.lang = currentLang;
+        rec.onresult = (e) => {
+          document.getElementById("userInput").value =
+            e.results[0][0].transcript;
+          handleSend();
+        };
+        rec.start();
+        showToast("Listening...");
+      }
+      function showPage(pageId) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById(pageId).classList.add("active");
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document
+          .querySelector(`.nav-item[data-page="${pageId}"]`)
+          .classList.add("active");
+        document.getElementById("pageTitle").innerText = document.querySelector(
+          `.nav-item[data-page="${pageId}"] span`,
+        ).innerText;
+        if (window.innerWidth <= 992) {
+          toggleSidebar();
+        }
+      }
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.addEventListener("click", () => showPage(item.dataset.page));
+      });
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+        document.getElementById("overlay").classList.toggle("active");
+      }
+      function toggleTheme() {
+        const html = document.documentElement;
+        html.setAttribute(
+          "data-theme",
+          html.getAttribute("data-theme") === "light" ? "dark" : "light",
+        );
+        showToast("Theme Changed");
+      }
+      function loadChart() {
+        const ctx = document.getElementById("chatChart");
+        if (!ctx) return;
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            datasets: [
+              {
+                label: "Daily Chats",
+                data: [12, 19, 8, 15, 22, 18],
+                borderColor: "#4f46e5",
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+        });
+      }
+      function updateDashboard() {
+        document.getElementById("statChats").innerText = chatHistory.length;
+        document.getElementById("profileChats").innerText = chatHistory.length;
+      }
+      function generateReport() {
+        const data = JSON.stringify(chatHistory, null, 2);
+        const blob = new Blob([data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "report.json";
+        a.click();
+        showToast("Report Downloaded");
+      }
+      function saveToHistory(q, a) {
+        chatHistory.push({
+          time: new Date().toLocaleString(),
+          user: currentUser.name,
+          question: q,
+          answer: a,
+          sentiment: analyzeSentiment(q),
+        });
+        localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+      }
+      function loadChatHistory() {
+        const tbody = document.querySelector("#historyTable tbody");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+        chatHistory
+          .slice(-15)
+          .reverse()
+          .forEach((item) => {
+            tbody.innerHTML += `<tr><td>${item.time}</td><td>${item.user}</td><td>${item.question}</td><td>${item.sentiment}</td></tr>`;
+          });
+      }
+      function clearChat() {
+        document.getElementById("chatArea").innerHTML = "";
+        displayWelcomeMessage();
+      }
+      function clearHistory() {
+        chatHistory = [];
+        localStorage.removeItem("chatHistory");
+        loadChatHistory();
+        updateDashboard();
+        showToast("History Cleared");
+      }
+      function loadBooks() {
+        const list = document.getElementById("bookList");
+        if (!list) return;
+        list.innerHTML = "";
+        BOOKS.forEach((book) => {
+          list.innerHTML += `<div class="book-card"><h4>${book.name}</h4><p>Author: ${book.author}</p><p>Year: ${book.year}</p><button onclick="showToast('Borrowed')">Borrow</button></div>`;
+        });
+      }
+      function searchBooks() {
+        const term = document.getElementById("bookSearch").value.toLowerCase();
+        document.querySelectorAll(".book-card").forEach((card) => {
+          card.style.display = card.innerText.toLowerCase().includes(term)
+            ? "block"
+            : "none";
+        });
+      }
+      function loadEvents() {
+        const list = document.getElementById("eventList");
+        if (!list) return;
+        list.innerHTML = "";
+        EVENTS.forEach((e) => {
+          list.innerHTML += `<div class="event-card"><h4>${e.title}</h4><p><i class="fa-solid fa-calendar"></i> ${e.date}</p><p>${e.desc}</p></div>`;
+        });
+      }
+      function checkAdminAccess() {
+        document.querySelectorAll(".admin-only").forEach((btn) => {
+          btn.style.display = currentUser.role === "Admin" ? "block" : "none";
+        });
+      }
+      function loadKnowledgeBase() {
+        const kbList = document.getElementById("kbList");
+        if (!kbList) return;
+        kbList.innerHTML = "";
+        let mergedKB = { ...KNOWLEDGE_BASE, ...customKB };
+        for (let key in mergedKB) {
+          kbList.innerHTML += `<div class="kb-item"><b>Q: ${key}</b><p>A: ${mergedKB[key]}</p></div>`;
+        }
+      }
+      function addNewFAQ() {
+        const k = document
+          .getElementById("adminKeyword")
+          .value.trim()
+          .toLowerCase();
+        const a = document.getElementById("adminAnswer").value.trim();
+        if (k === "" || a === "") {
+          alert("Fill both");
+          return;
+        }
+        customKB[k] = a;
+        localStorage.setItem("customKB", JSON.stringify(customKB));
+        document.getElementById("adminKeyword").value = "";
+        document.getElementById("adminAnswer").value = "";
+        loadKnowledgeBase();
+        showToast("FAQ Added");
+      }
+      function loadQuickQuestions() {
+        const container = document.getElementById("quickQuestions");
+        if (!container) return;
+        container.innerHTML = "";
+        QUICK_QUESTIONS.forEach((q) => {
+          container.innerHTML += `<button class="q-btn" onclick="document.getElementById('userInput').value='${q}'; handleSend()">${q}</button>`;
+        });
+      }
+      function showToast(msg) {
+        const t = document.createElement("div");
+        t.className = "toast";
+        t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2500);
+      }
+      function exportChat() {
+        generateReport();
+      }
+    </script>
+  </body>
+</html>
